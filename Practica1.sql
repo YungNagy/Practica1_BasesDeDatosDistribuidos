@@ -1,6 +1,6 @@
--- P R ¡ C T I C A  1
+-- P R √Å C T I C A  1
 
---SEGMENTACI”N
+--SEGMENTACI√ìN
 
 select * into Noroeste from covidHistorico.dbo.datoscovid 
 where ENTIDAD_RES = '02' or ENTIDAD_RES = '03' or ENTIDAD_RES = '25'
@@ -160,7 +160,7 @@ on A.ENTIDAD_RES = B.ENTIDAD_RES and
 
 --EJERCICIO 2
 /*Determinar en que entidad de residencia y en 
-que mes se reportaron m·s casos confirmados y que
+que mes se reportaron m√°s casos confirmados y que
 porcentaje representa del total de casos por entidad.*/
 --Realizado por: Alvarez Zamora Oscar Eduardo
 use P1
@@ -177,10 +177,10 @@ select count(*) as NumCasosAtendidosFuera from datoscovid
 where ENTIDAD_UM != ENTIDAD_RES
 
 --EJERCICIO 4
-/* Determinar la evoluciÛn de la pandemia 
+/* Determinar la evoluci√≥n de la pandemia 
       (casos registrados / casos sospechosos / 
 	  casos confirmados por mes) en cada una de las entidades 
-	  del paÌs. Esta informaciÛn permitir· identificar
+	  del pa√≠s. Esta informaci√≥n permitir√° identificar
 	  los picos de casos en las diferentes olas de contagio
 	  registradas.*/
 --Realizado por: 
@@ -206,21 +206,21 @@ where ENTIDAD_UM != ENTIDAD_RES
 /*Listar todas las columnas de los registros duplicados 
       obtenidos en la consulta 5. Para esta consulta aplique 
 	  el concepto de resta de conjuntos o diferencia de 
-	  ·lgebra relacional. Ordenar los resultados por entidad 
+	  √°lgebra relacional. Ordenar los resultados por entidad 
 	  de residencia.*/
 --Realizado por: 
 
    
 
 --EJERCICIO 7
-/*Determinar las 5 entidades con el mayor n˙mero de fallecidos 
-      por aÒo, con casos de neumonÌa y caso no confirmado de Covid.*/
+/*Determinar las 5 entidades con el mayor n√∫mero de fallecidos 
+      por a√±o, con casos de neumon√≠a y caso no confirmado de Covid.*/
 --Realizado por: 
    
 
 --EJERCICIO 8
 /*Determinar que entidades presentan comorbilidad sin obesidad
-      y sin hipertensiÛn.*/
+      y sin hipertensi√≥n.*/
 --Realizado por: 
 
 
@@ -234,10 +234,10 @@ where ENTIDAD_UM != ENTIDAD_RES
    
 
 --EJERCICIO 10
-/*Determinar por entidad en que aÒo de los registrados en 
-       la base de datos, se presentaron m·s casos en niÒos menos 
-	   a 12 aÒos.*/
---Realizado por: 
+/*Determinar por entidad en que a√±o de los registrados en 
+       la base de datos, se presentaron m√°s casos en ni√±os menos 
+	   a 12 a√±os.*/
+--Realizado por: Alvarez Zamora Oscar Eduardo
 use covidHistorico
 go
 select ENTIDAD_RES, count(*) as CasosMenoresA12, year(FECHA_INGRESO) as Anio from datoscovid 
