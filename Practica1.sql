@@ -158,6 +158,18 @@ on A.ENTIDAD_RES = B.ENTIDAD_RES and
    A.mes = B.mes and A.anio = B.anio
    order by A.anio, A.mes, A.ENTIDAD_RES
 
+   --Conjunto de las cinco regiones para las consultas veloces
+   select * into T1 
+   from Centro.dbo.datos
+   union
+   select * from Noreste.dbo.datos
+   union
+   select * from Noroeste.dbo.datos
+   union
+   select * from Sureste.dbo.datos
+   union
+   select * from Occidente.dbo.datos
+
 --EJERCICIO 2
 /*Determinar en que entidad de residencia y en 
 que mes se reportaron más casos confirmados y que
@@ -171,9 +183,10 @@ select top 1 *, (total_confirmados*100)/(total_registrados) as Porcentaje from E
 /*Determinar cuantos casos fueron atendidos en 
       entidades distintas a la entidad de residencia.*/
 --Realizado por: Alvarez Zamora Oscar Eduardo
-use covidHistorico
+use P1
 go
-select count(*) as NumCasosAtendidosFuera from datoscovid 
+
+select count(*) as NumCasosAtendidosFuera from T1
 where ENTIDAD_UM != ENTIDAD_RES
 
 --EJERCICIO 4
@@ -183,10 +196,12 @@ where ENTIDAD_UM != ENTIDAD_RES
 	  del país. Esta información permitirá identificar
 	  los picos de casos en las diferentes olas de contagio
 	  registradas.*/
---Realizado por: 
+--Realizado por: Alemón Pérez Alejandro
 
-   
-
+use P1
+go
+select *, (total_registrados - total_confirmados) as total_sospechosos from E1 order by anio, mes, ENTIDAD_RES
+  
 --EJERCICIO 5
 /*Determinar cuantos registros se repiten en la 
       base de datos, considerando las siguientes columnas: 
@@ -199,7 +214,7 @@ where ENTIDAD_UM != ENTIDAD_RES
       ,[PAIS_NACIONALIDAD],[PAIS_ORIGEN]     
 
 	  Ordenar los datos por entidad de residencia*/
---Realizado por: 
+--Realizado por: Argüello García Jesús Iván
    
 
 --EJERCICIO 6
@@ -208,7 +223,7 @@ where ENTIDAD_UM != ENTIDAD_RES
 	  el concepto de resta de conjuntos o diferencia de 
 	  álgebra relacional. Ordenar los resultados por entidad 
 	  de residencia.*/
---Realizado por: 
+--Realizado por: Argüello García Jesús Iván
 
    
 
@@ -217,11 +232,11 @@ where ENTIDAD_UM != ENTIDAD_RES
       por año, con casos de neumonía y caso no confirmado de Covid.*/
 --Realizado por: Alvarez Zamora Oscar Eduardo
 
-use covidHistorico
+use P1
 go
 select * from 
 (select top 5 entidad_res as Entidades, count(*) as total_defuncion, year(FECHA_INGRESO) as anio
-    from datoscovid
+    from T1
         where FECHA_DEF != '9999-99-99' 
 			and YEAR(FECHA_INGRESO) = '2020'
 			and NEUMONIA = '1' and CLASIFICACION_FINAL between '4' and '7'
@@ -230,7 +245,7 @@ order by total_defuncion desc) A
 union
 select * from 
 (select top 5 entidad_res as Entidades, count(*) as total_defuncion, year(FECHA_INGRESO) as anio
-    from datoscovid
+    from T1
         where FECHA_DEF != '9999-99-99' 
 			and YEAR(FECHA_INGRESO) = '2021'
 			and NEUMONIA = '1' and CLASIFICACION_FINAL between '4' and '7'
@@ -239,7 +254,7 @@ order by total_defuncion desc) B
 union
 select * from 
 (select top 5 entidad_res as Entidades, count(*) as total_defuncion, year(FECHA_INGRESO) as anio
-    from datoscovid
+    from T1
         where FECHA_DEF != '9999-99-99' 
 			and YEAR(FECHA_INGRESO) = '2022'
 			and NEUMONIA = '1' and CLASIFICACION_FINAL between '4' and '7'
@@ -251,8 +266,7 @@ order by total_defuncion desc) C
 --EJERCICIO 8
 /*Determinar que entidades presentan comorbilidad sin obesidad
       y sin hipertensión.*/
---Realizado por: 
-
+--Realizado por: Argüello García Jesús Iván
 
 
 --EJERCICIO 9
@@ -260,20 +274,20 @@ order by total_defuncion desc) C
       20 a los 39 y de los 40 a 59 se registraron en 2020, 2021 
 	  y 2022 (hasta la fecha en que se tienen registros en la base 
 	  de datos).*/
---Realizado por: 
+--Realizado por: Alemón Pérez Alejandro
 
-use covidHistorico
+use P1
 go   
 select M1.anio, M1.casosM1 Mujeres2039, M2.casosM2 Mujeres4059, H1.casosH1 Hombres2039, H2.casosH2 Hombres4049
 from(select count(*) as casosM1, YEAR(fecha_ingreso) AS anio
-from datoscovid
+from T1
 where sexo = '1'
     and CLASIFICACION_FINAL between '1' and '3'
     and edad between '20' and '39'
 group by YEAR(fecha_ingreso)) AS M1
 inner join 
 (select count(*) as casosM2, YEAR(fecha_ingreso) AS anio
-from datoscovid
+from T1
 where sexo = '1'
     and CLASIFICACION_FINAL between '1' and '3'
     and edad between '40' and '59'
@@ -281,7 +295,7 @@ group by YEAR(fecha_ingreso)) AS M2
 on M1.anio = M2.anio
 inner join
 (select count(*) as casosH1, YEAR(fecha_ingreso) AS anio
-from datoscovid
+from T1
 where sexo = '2'
     and CLASIFICACION_FINAL between '1' and '3'
     and edad between '20' and '39'
@@ -289,7 +303,7 @@ group by YEAR(fecha_ingreso)) AS H1
 on M2.anio = H1.anio
 inner join
 (select count(*) as casosH2, YEAR(fecha_ingreso) AS anio
-from datoscovid
+from T1
 where sexo = '2'
     and CLASIFICACION_FINAL between '1' and '3'
     and edad between '40' and '59'
@@ -302,11 +316,23 @@ order by M1.anio;
 /*Determinar por entidad en que año de los registrados en 
        la base de datos, se presentaron más casos en niños menos 
 	   a 12 años.*/
---Realizado por: 
+--Realizado por: Argüello García Jesús Iván
 
-use covidHistorico
+use P1
 go
-select ENTIDAD_RES, count(*) as CasosMenoresA12, year(FECHA_INGRESO) as Anio from datoscovid 
-where EDAD < 12
-group by ENTIDAD_RES, year(FECHA_INGRESO)
-order by ENTIDAD_RES, CasosMenoresA12 desc
+select A.ENTIDAD_RES, A.anio, A.tc
+from (select ENTIDAD_RES, anio, count(*) tc
+from (select year(FECHA_INGRESO) as anio, ID_REGISTRO, ENTIDAD_RES from T1
+	where CLASIFICACION_FINAL between 1 and 3
+	and EDAD < 12) as T
+	group by ENTIDAD_RES, anio) as A
+inner join
+	(select ENTIDAD_RES, max(tc) as x
+	from (select ENTIDAD_RES, anio, count(*) tc
+	from (select year(FECHA_INGRESO) as anio, ID_REGISTRO, ENTIDAD_RES from T1
+		where CLASIFICACION_FINAL between 1 and 3
+		and EDAD < 12) as T
+		group by ENTIDAD_RES, anio) as T2
+	group by ENTIDAD_RES) as B
+on A.ENTIDAD_RES = B.ENTIDAD_RES and A.tc = B.x
+order by ENTIDAD_RES
