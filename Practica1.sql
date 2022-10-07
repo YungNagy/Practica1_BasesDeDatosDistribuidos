@@ -230,7 +230,7 @@ select *, (total_registrados - total_confirmados) as total_sospechosos from E1 o
 --EJERCICIO 7
 /*Determinar las 5 entidades con el mayor número de fallecidos 
       por año, con casos de neumonía y caso no confirmado de Covid.*/
---Realizado por: Alvarez Zamora Oscar Eduardo
+--Realizado por: Alemón Pérez Alejandro
 
 use P1
 go
@@ -316,7 +316,7 @@ order by M1.anio;
 /*Determinar por entidad en que año de los registrados en 
        la base de datos, se presentaron más casos en niños menos 
 	   a 12 años.*/
---Realizado por: Argüello García Jesús Iván
+--Realizado por: Alvarez Zamora Oscar Eduardo
 
 use P1
 go
