@@ -352,3 +352,17 @@ inner join
 	group by ENTIDAD_RES) as B
 on A.ENTIDAD_RES = B.ENTIDAD_RES and A.tc = B.x
 order by ENTIDAD_RES
+
+
+/*
+CONCLUSIONES DE LA PRACTICA 1: 
+Esta practica nos fue de gran ayuda para reforzar y retomar los conocimientos ya adquiridos de la materia de Base de datos 
+Puesto que al haber sido una materia que ya teniamos tiempo sin tenerla, algunas cosas se nos dificultaron, empezando desde la sintaxis, como
+la logica de SQL para poder realizar las consultas. Consideramos que manejar bases de datos mas complejas o por lo menos mas grandes como lo fue 
+en este caso de los Datos Covid, proporciona un amplio desarrollo tanto teórico como práctico puesto que soliamos estar acostumbrados a casos
+de consultas mas sencillas. También creemos que el separar en varios pedazos la base de datos como en este caso que hicimos distintas bases de 
+datos para cada región nos permitirá ya en algun futuro dentro de la materia, y entendiendoo que queremos llevar todo este conocimiento al entorno 
+distribuido a poder realizarlo de manera mas sencilla o en cuestiones de que podamos tener una red de maquinas una con cada base de datos.
+Por lo que terminamos obteniendo mejor conocimiento sobre SQL, consultas y detalles que se habian perdido de vista a traves del tiempo. 
+
+*/
