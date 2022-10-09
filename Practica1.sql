@@ -1,6 +1,6 @@
--- P R Á C T I C A  1
+-- P R Ã C T I C A  1
 
---SEGMENTACIÓN
+--SEGMENTACIÃ“N
 
 select * into Noroeste from covidHistorico.dbo.datoscovid 
 where ENTIDAD_RES = '02' or ENTIDAD_RES = '03' or ENTIDAD_RES = '25'
@@ -172,7 +172,7 @@ on A.ENTIDAD_RES = B.ENTIDAD_RES and
 
 --EJERCICIO 2
 /*Determinar en que entidad de residencia y en 
-que mes se reportaron más casos confirmados y que
+que mes se reportaron mÃ¡s casos confirmados y que
 porcentaje representa del total de casos por entidad.*/
 --Realizado por: Alvarez Zamora Oscar Eduardo
 use P1
@@ -190,13 +190,13 @@ select count(*) as NumCasosAtendidosFuera from T1
 where ENTIDAD_UM != ENTIDAD_RES
 
 --EJERCICIO 4
-/* Determinar la evolución de la pandemia 
+/* Determinar la evoluciÃ³n de la pandemia 
       (casos registrados / casos sospechosos / 
 	  casos confirmados por mes) en cada una de las entidades 
-	  del país. Esta información permitirá identificar
+	  del paÃ­s. Esta informaciÃ³n permitirÃ¡ identificar
 	  los picos de casos en las diferentes olas de contagio
 	  registradas.*/
---Realizado por: Alemón Pérez Alejandro
+--Realizado por: AlemÃ³n PÃ©rez Alejandro
 
 use P1
 go
@@ -214,39 +214,37 @@ select *, (total_registrados - total_confirmados) as total_sospechosos from E1 o
       ,[PAIS_NACIONALIDAD],[PAIS_ORIGEN]     
 
 	  Ordenar los datos por entidad de residencia*/
---Realizado por: Argüello García Jesús Iván
-   
-select A.ENTIDAD_RES, count(*) from 
-(select ID_REGISTRO, ENTIDAD_UM, SEXO, ENTIDAD_NAC, ENTIDAD_RES, MUNICIPIO_RES, EDAD, NACIONALIDAD, HABLA_LENGUA_INDIG,
-  INDIGENA, DIABETES, EPOC, ASMA, INMUSUPR, HIPERTENSION, OTRA_COM, CARDIOVASCULAR, OBESIDAD, RENAL_CRONICA,
-  TABAQUISMO, OTRO_CASO, MIGRANTE, PAIS_NACIONALIDAD, PAIS_ORIGEN from T1) as A
-inner join
-  (select ID_REGISTRO, ENTIDAD_UM, SEXO, ENTIDAD_NAC, ENTIDAD_RES, MUNICIPIO_RES, EDAD, NACIONALIDAD, HABLA_LENGUA_INDIG,
-  INDIGENA, DIABETES, EPOC, ASMA, INMUSUPR, HIPERTENSION, OTRA_COM, CARDIOVASCULAR, OBESIDAD, RENAL_CRONICA,
-  TABAQUISMO, OTRO_CASO, MIGRANTE, PAIS_NACIONALIDAD, PAIS_ORIGEN from T1) as B
-on A.ENTIDAD_UM = B.ENTIDAD_UM and A.SEXO = B.SEXO and A.ENTIDAD_NAC = B.ENTIDAD_NAC and A.ENTIDAD_RES = B.ENTIDAD_RES
-and A.MUNICIPIO_RES = B.MUNICIPIO_RES and A.EDAD = B.EDAD and A.NACIONALIDAD = B.NACIONALIDAD and A.HABLA_LENGUA_INDIG = B.HABLA_LENGUA_INDIG
-and A.INDIGENA = B.INDIGENA and A.DIABETES = B.DIABETES and A.EPOC = B.EPOC and A.ASMA = B.ASMA and A.INMUSUPR = B.INMUSUPR
-and A.HIPERTENSION = B.HIPERTENSION and A.OTRA_COM = B.OTRA_COM and A.CARDIOVASCULAR = B.CARDIOVASCULAR and A.OBESIDAD = B.OBESIDAD
-and A.RENAL_CRONICA = B.RENAL_CRONICA and A.TABAQUISMO = B.TABAQUISMO and A.OTRO_CASO = B.OTRO_CASO and A.MIGRANTE = B.MIGRANTE 
-and A.PAIS_NACIONALIDAD = B.PAIS_NACIONALIDAD and A.PAIS_ORIGEN = B.PAIS_ORIGEN and A.ID_REGISTRO != B.ID_REGISTRO
-group by A.ENTIDAD_RES
-order by A.ENTIDAD_RES
+--Realizado por: ArgÃ¼ello GarcÃ­a JesÃºs IvÃ¡n
+
+use P1
+go
+
+select ENTIDAD_RES, SEXO, ENTIDAD_UM, ENTIDAD_NAC, MUNICIPIO_RES, EDAD, NACIONALIDAD, HABLA_LENGUA_INDIG, 
+	   INDIGENA, DIABETES, EPOC, ASMA, INMUSUPR, HIPERTENSION, OTRA_COM, CARDIOVASCULAR, OBESIDAD, RENAL_CRONICA, TABAQUISMO,
+	   OTRO_CASO, MIGRANTE, PAIS_NACIONALIDAD, PAIS_ORIGEN, count(*) as total
+from P1.dbo.T1 A
+group by ENTIDAD_RES, SEXO, ENTIDAD_UM, ENTIDAD_NAC, MUNICIPIO_RES, EDAD, NACIONALIDAD, HABLA_LENGUA_INDIG, 
+	   INDIGENA, DIABETES, EPOC, ASMA, INMUSUPR, HIPERTENSION, OTRA_COM, CARDIOVASCULAR, OBESIDAD, RENAL_CRONICA, TABAQUISMO,
+	   OTRO_CASO, MIGRANTE, PAIS_NACIONALIDAD, PAIS_ORIGEN
+having count(*)>1
+order by ENTIDAD_RES
+
+
 
 --EJERCICIO 6
 /*Listar todas las columnas de los registros duplicados 
       obtenidos en la consulta 5. Para esta consulta aplique 
 	  el concepto de resta de conjuntos o diferencia de 
-	  álgebra relacional. Ordenar los resultados por entidad 
+	  Ã¡lgebra relacional. Ordenar los resultados por entidad 
 	  de residencia.*/
---Realizado por: Argüello García Jesús Iván
+--Realizado por: ArgÃ¼ello GarcÃ­a JesÃºs IvÃ¡n
 
    
 
 --EJERCICIO 7
-/*Determinar las 5 entidades con el mayor número de fallecidos 
-      por año, con casos de neumonía y caso no confirmado de Covid.*/
---Realizado por: Alemón Pérez Alejandro
+/*Determinar las 5 entidades con el mayor nÃºmero de fallecidos 
+      por aÃ±o, con casos de neumonÃ­a y caso no confirmado de Covid.*/
+--Realizado por: AlemÃ³n PÃ©rez Alejandro
 
 use P1
 go
@@ -281,8 +279,8 @@ order by total_defuncion desc) C
 
 --EJERCICIO 8
 /*Determinar que entidades presentan comorbilidad sin obesidad
-      y sin hipertensión.*/
---Realizado por: Argüello García Jesús Iván
+      y sin hipertensiÃ³n.*/
+--Realizado por: ArgÃ¼ello GarcÃ­a JesÃºs IvÃ¡n
 
 
 --EJERCICIO 9
@@ -290,7 +288,7 @@ order by total_defuncion desc) C
       20 a los 39 y de los 40 a 59 se registraron en 2020, 2021 
 	  y 2022 (hasta la fecha en que se tienen registros en la base 
 	  de datos).*/
---Realizado por: Alemón Pérez Alejandro
+--Realizado por: AlemÃ³n PÃ©rez Alejandro
 
 use P1
 go   
@@ -329,9 +327,9 @@ order by M1.anio;
 
 
 --EJERCICIO 10
-/*Determinar por entidad en que año de los registrados en 
-       la base de datos, se presentaron más casos en niños menos 
-	   a 12 años.*/
+/*Determinar por entidad en que aÃ±o de los registrados en 
+       la base de datos, se presentaron mÃ¡s casos en niÃ±os menos 
+	   a 12 aÃ±os.*/
 --Realizado por: Alvarez Zamora Oscar Eduardo
 
 use P1
@@ -359,9 +357,9 @@ CONCLUSIONES DE LA PRACTICA 1:
 Esta practica nos fue de gran ayuda para reforzar y retomar los conocimientos ya adquiridos de la materia de Base de datos 
 Puesto que al haber sido una materia que ya teniamos tiempo sin tenerla, algunas cosas se nos dificultaron, empezando desde la sintaxis, como
 la logica de SQL para poder realizar las consultas. Consideramos que manejar bases de datos mas complejas o por lo menos mas grandes como lo fue 
-en este caso de los Datos Covid, proporciona un amplio desarrollo tanto teórico como práctico puesto que soliamos estar acostumbrados a casos
-de consultas mas sencillas. También creemos que el separar en varios pedazos la base de datos como en este caso que hicimos distintas bases de 
-datos para cada región nos permitirá ya en algun futuro dentro de la materia, y entendiendoo que queremos llevar todo este conocimiento al entorno 
+en este caso de los Datos Covid, proporciona un amplio desarrollo tanto teÃ³rico como prÃ¡ctico puesto que soliamos estar acostumbrados a casos
+de consultas mas sencillas. TambiÃ©n creemos que el separar en varios pedazos la base de datos como en este caso que hicimos distintas bases de 
+datos para cada regiÃ³n nos permitirÃ¡ ya en algun futuro dentro de la materia, y entendiendoo que queremos llevar todo este conocimiento al entorno 
 distribuido a poder realizarlo de manera mas sencilla o en cuestiones de que podamos tener una red de maquinas una con cada base de datos.
 Por lo que terminamos obteniendo mejor conocimiento sobre SQL, consultas y detalles que se habian perdido de vista a traves del tiempo. 
 
