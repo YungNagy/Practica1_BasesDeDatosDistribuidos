@@ -1,0 +1,3 @@
+# Practica1_BasesDeDatosDistribuidos
+Nosenadaayudaaaaaaa
+refacil uwu
