@@ -200,7 +200,18 @@ where ENTIDAD_UM != ENTIDAD_RES
 
 use P1
 go
-select *, (total_registrados - total_confirmados) as total_sospechosos from E1 order by anio, mes, ENTIDAD_RES
+select T2.ENTIDAD_RES, T2.mes, T2.anio, T4.total_confirmados, T2.total_sospechosos, T4.total_registrados from
+(select ENTIDAD_RES, total_confirmados, total_registrados, mes, anio from E1) as T4
+inner join
+(select T.entidad_res, T.mes, T.anio, count(*) total_sospechosos
+from ( select id_registro, entidad_res, month(FECHA_INGRESO) mes, 
+              year(fecha_ingreso) anio, CLASIFICACION_FINAL
+       from T1
+       where year(fecha_ingreso) between '2020' and '2022') as T
+where CLASIFICACION_FINAL = 6
+group by entidad_res, mes, anio) as T2
+on T4.Entidad_res = T2.Entidad_res and T4.mes = T2.mes and T4.anio = T2.anio
+order by T2.entidad_res, T2.anio, T2.mes
   
 --EJERCICIO 5
 /*Determinar cuantos registros se repiten en la 
