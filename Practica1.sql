@@ -218,15 +218,14 @@ select *, (total_registrados - total_confirmados) as total_sospechosos from E1 o
 
 use P1
 go
-
-select ENTIDAD_RES, SEXO, ENTIDAD_UM, ENTIDAD_NAC, MUNICIPIO_RES, EDAD, NACIONALIDAD, HABLA_LENGUA_INDIG, 
-	   INDIGENA, DIABETES, EPOC, ASMA, INMUSUPR, HIPERTENSION, OTRA_COM, CARDIOVASCULAR, OBESIDAD, RENAL_CRONICA, TABAQUISMO,
-	   OTRO_CASO, MIGRANTE, PAIS_NACIONALIDAD, PAIS_ORIGEN, count(*) as total
+select ENTIDAD_RES, count (*) as Totalrepetidos from(
+select ENTIDAD_RES, count(*) as total
 from P1.dbo.T1 A
 group by ENTIDAD_RES, SEXO, ENTIDAD_UM, ENTIDAD_NAC, MUNICIPIO_RES, EDAD, NACIONALIDAD, HABLA_LENGUA_INDIG, 
 	   INDIGENA, DIABETES, EPOC, ASMA, INMUSUPR, HIPERTENSION, OTRA_COM, CARDIOVASCULAR, OBESIDAD, RENAL_CRONICA, TABAQUISMO,
 	   OTRO_CASO, MIGRANTE, PAIS_NACIONALIDAD, PAIS_ORIGEN
-having count(*)>1
+having count(*)>1) A
+group by ENTIDAD_RES
 order by ENTIDAD_RES
 
 
@@ -239,6 +238,18 @@ order by ENTIDAD_RES
 	  de residencia.*/
 --Realizado por: Argüello García Jesús Iván
 
+use P1
+go
+
+select ENTIDAD_RES, SEXO, ENTIDAD_UM, ENTIDAD_NAC, MUNICIPIO_RES, EDAD, NACIONALIDAD, HABLA_LENGUA_INDIG, 
+	   INDIGENA, DIABETES, EPOC, ASMA, INMUSUPR, HIPERTENSION, OTRA_COM, CARDIOVASCULAR, OBESIDAD, RENAL_CRONICA, TABAQUISMO,
+	   OTRO_CASO, MIGRANTE, PAIS_NACIONALIDAD, PAIS_ORIGEN, count(*) as total
+from P1.dbo.T1 A
+group by ENTIDAD_RES, SEXO, ENTIDAD_UM, ENTIDAD_NAC, MUNICIPIO_RES, EDAD, NACIONALIDAD, HABLA_LENGUA_INDIG, 
+	   INDIGENA, DIABETES, EPOC, ASMA, INMUSUPR, HIPERTENSION, OTRA_COM, CARDIOVASCULAR, OBESIDAD, RENAL_CRONICA, TABAQUISMO,
+	   OTRO_CASO, MIGRANTE, PAIS_NACIONALIDAD, PAIS_ORIGEN
+having count(*)>1
+order by ENTIDAD_RES
    
 
 --EJERCICIO 7
@@ -281,6 +292,75 @@ order by total_defuncion desc) C
 /*Determinar que entidades presentan comorbilidad sin obesidad
       y sin hipertensión.*/
 --Realizado por: Argüello García Jesús Iván
+use P1
+go
+
+select ID_REGISTRO, ENTIDAD_RES, ENTIDAD_UM, MUNICIPIO_RES, TIPO_PACIENTE, SEXO, FECHA_INGRESO, FECHA_DEF,
+       DIABETES, HIPERTENSION, OBESIDAD, CARDIOVASCULAR, INMUSUPR, EPOC, ASMA, RENAL_CRONICA,
+       TABAQUISMO, CLASIFICACION_FINAL, INTUBADO, UCI into dbo.registros_comorbilidad
+from P1.dbo.T1 B
+where exists (select *
+              from (select id_registro,
+                             IIF(IIF(DIABETES = '1',1,0)+
+                                 IIF(EPOC = '1',1,0)+
+                               IIF(ASMA = '1',1,0)+
+                               IIF(INMUSUPR = '1',1,0)+
+                               IIF(HIPERTENSION = '1',1,0) +
+                               IIF(CARDIOVASCULAR = '1',1,0) +
+                               IIF(TABAQUISMO = '1',1,0) +
+                               IIF(OBESIDAD = '1',1,0) +
+                               IIF(RENAL_CRONICA = '1',1,0) +
+                               IIF(OTRA_COM = '1',1,0) >= 2, 1, null) as 'noEnfermedades'
+                    from P1.dbo.T1 ) as T
+               where B.ID_REGISTRO = T.ID_REGISTRO and noEnfermedades is not null)
+
+select municipio_res, obesidad, hipertension into R
+from registros_comorbilidad
+select * from R
+
+select 2 as obesidad, 2 as hipertension into S
+select * from S
+
+select municipio_res into TP
+from registros_comorbilidad
+
+select * into TPXS
+from TP cross join S
+
+select *
+from TPXS
+
+-- T2
+select municipio_res into T2
+from (
+        select * -- municipio_res, asma, cardiovascular
+        from R
+        except
+        select * 
+        from TPXS
+      ) as TT2
+      
+-- T1 - T2
+select * 
+from (select * 
+      from TP except select *
+                     from T2) as C
+
+select *
+from registros_comorbilidad rc
+where exists (
+select rsac.municipio_res, rcc.tcrc
+from (select municipio_res, count(*) csac
+      from registros_comorbilidad rc
+      where OBESIDAD='2' and HIPERTENSION='2'
+      group by municipio_res) rsac
+inner join
+     (select municipio_res, count(*) tcrc
+      from registros_comorbilidad rc
+      group by municipio_res) rcc
+on rsac.municipio_res = rcc.municipio_res
+and rsac.csac = rcc.tcrc
+where rsac.municipio_res = rc.municipio_res)
 
 
 --EJERCICIO 9
